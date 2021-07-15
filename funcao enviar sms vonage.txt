@@ -1,0 +1,19 @@
+ public sendSms(){
+    // const API_URL_LOCAL = 'http://localhost:33333'
+    const payload = new HttpParams()
+    .set('from', this.from)
+    .set('to', this.to)
+    .set('text', this.text);
+
+    return this.http.post('http://sms.com:3000/send-sms', payload)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.toastController.create({ message: 'dentro do catch error!'})
+          .then((alert) => alert.present());
+        return throwError('Oops!');
+      }))
+    .subscribe(async (resp: any) => {
+      const alert = await this.toastController.create({ message: resp.message });
+      await alert.present();
+    });
+}
